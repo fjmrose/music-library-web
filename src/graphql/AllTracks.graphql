@@ -1,0 +1,12 @@
+query AllTracks{
+  all_tracks{
+    title
+    track_type
+    artists{
+      name
+    }
+    genres{
+      name
+    }  
+  }
+}
