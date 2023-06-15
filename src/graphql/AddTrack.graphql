@@ -1,0 +1,9 @@
+mutation AddTrack($input: TrackInput!){
+  add_track(input: $input){
+    title
+    track_type
+    artists{
+      name
+    }
+  }
+}

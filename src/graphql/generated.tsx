@@ -145,12 +145,56 @@ export enum TrackType {
   Remix = 'REMIX'
 }
 
+export type AddTrackMutationVariables = Exact<{
+  input: TrackInput;
+}>;
+
+
+export type AddTrackMutation = { __typename?: 'Mutation', add_track: { __typename?: 'Track', title: string, track_type: TrackType, artists: Array<{ __typename?: 'Artist', name: string }> } };
+
 export type AllTracksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllTracksQuery = { __typename?: 'Query', all_tracks: Array<{ __typename?: 'Track', title: string, track_type: TrackType, artists: Array<{ __typename?: 'Artist', name: string }>, genres: Array<{ __typename?: 'Genre', name: string }> }> };
 
 
+export const AddTrackDocument = gql`
+    mutation AddTrack($input: TrackInput!) {
+  add_track(input: $input) {
+    title
+    track_type
+    artists {
+      name
+    }
+  }
+}
+    `;
+export type AddTrackMutationFn = Apollo.MutationFunction<AddTrackMutation, AddTrackMutationVariables>;
+
+/**
+ * __useAddTrackMutation__
+ *
+ * To run a mutation, you first call `useAddTrackMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTrackMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTrackMutation, { data, loading, error }] = useAddTrackMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddTrackMutation(baseOptions?: Apollo.MutationHookOptions<AddTrackMutation, AddTrackMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddTrackMutation, AddTrackMutationVariables>(AddTrackDocument, options);
+      }
+export type AddTrackMutationHookResult = ReturnType<typeof useAddTrackMutation>;
+export type AddTrackMutationResult = Apollo.MutationResult<AddTrackMutation>;
+export type AddTrackMutationOptions = Apollo.BaseMutationOptions<AddTrackMutation, AddTrackMutationVariables>;
 export const AllTracksDocument = gql`
     query AllTracks {
   all_tracks {
