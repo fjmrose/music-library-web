@@ -1,12 +1,26 @@
 query AllTracks{
   all_tracks{
-    title
-    track_type
+    album{
+      title
+      url
+    }
     artists{
       name
     }
+    created_at
     genres{
       name
-    }  
+    } 
+    host
+    id
+    image
+    release_date
+    remix_artists{
+      name
+    }
+    title
+    track_type
+    url
   }
 }
+

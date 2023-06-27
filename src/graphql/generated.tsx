@@ -155,7 +155,7 @@ export type AddTrackMutation = { __typename?: 'Mutation', add_track: { __typenam
 export type AllTracksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllTracksQuery = { __typename?: 'Query', all_tracks: Array<{ __typename?: 'Track', title: string, track_type: TrackType, artists: Array<{ __typename?: 'Artist', name: string }>, genres: Array<{ __typename?: 'Genre', name: string }> }> };
+export type AllTracksQuery = { __typename?: 'Query', all_tracks: Array<{ __typename?: 'Track', created_at?: any | null, host: Host, id: string, image?: string | null, release_date?: any | null, title: string, track_type: TrackType, url: string, album?: { __typename?: 'Album', title: string, url: string } | null, artists: Array<{ __typename?: 'Artist', name: string }>, genres: Array<{ __typename?: 'Genre', name: string }>, remix_artists?: Array<{ __typename?: 'Artist', name: string }> | null }> };
 
 
 export const AddTrackDocument = gql`
@@ -198,14 +198,27 @@ export type AddTrackMutationOptions = Apollo.BaseMutationOptions<AddTrackMutatio
 export const AllTracksDocument = gql`
     query AllTracks {
   all_tracks {
-    title
-    track_type
+    album {
+      title
+      url
+    }
     artists {
       name
     }
+    created_at
     genres {
       name
     }
+    host
+    id
+    image
+    release_date
+    remix_artists {
+      name
+    }
+    title
+    track_type
+    url
   }
 }
     `;
