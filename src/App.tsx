@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import AddTrackModal from './components/AddTrackModal';
+import { AddTrackModal } from './components/AddTrackModal';
 import TrackTable from './components/TrackTable';
 
 export default function App() {
@@ -15,7 +15,9 @@ export default function App() {
         >
           Add Track
         </button>
-        {modal && <AddTrackModal modal={modal} setModal={setModal} />}
+        {modal && (
+          <AddTrackModal open={modal} onClose={() => setModal(false)} />
+        )}
       </div>
     </div>
   );
