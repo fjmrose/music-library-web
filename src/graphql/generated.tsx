@@ -103,6 +103,7 @@ export type Query = {
   __typename?: 'Query';
   all_albums: Array<Album>;
   all_artists: Array<Artist>;
+  all_genres: Array<Genre>;
   all_mixes: Array<Mix>;
   all_tracks: Array<Track>;
 };
@@ -152,6 +153,11 @@ export type AddTrackMutationVariables = Exact<{
 
 export type AddTrackMutation = { __typename?: 'Mutation', add_track: { __typename?: 'Track', title: string, track_type: TrackType, artists: Array<{ __typename?: 'Artist', name: string }> } };
 
+export type AllGenresQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllGenresQuery = { __typename?: 'Query', all_genres: Array<{ __typename?: 'Genre', name: string }> };
+
 export type AllTracksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -195,6 +201,40 @@ export function useAddTrackMutation(baseOptions?: Apollo.MutationHookOptions<Add
 export type AddTrackMutationHookResult = ReturnType<typeof useAddTrackMutation>;
 export type AddTrackMutationResult = Apollo.MutationResult<AddTrackMutation>;
 export type AddTrackMutationOptions = Apollo.BaseMutationOptions<AddTrackMutation, AddTrackMutationVariables>;
+export const AllGenresDocument = gql`
+    query AllGenres {
+  all_genres {
+    name
+  }
+}
+    `;
+
+/**
+ * __useAllGenresQuery__
+ *
+ * To run a query within a React component, call `useAllGenresQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllGenresQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllGenresQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllGenresQuery(baseOptions?: Apollo.QueryHookOptions<AllGenresQuery, AllGenresQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllGenresQuery, AllGenresQueryVariables>(AllGenresDocument, options);
+      }
+export function useAllGenresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllGenresQuery, AllGenresQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllGenresQuery, AllGenresQueryVariables>(AllGenresDocument, options);
+        }
+export type AllGenresQueryHookResult = ReturnType<typeof useAllGenresQuery>;
+export type AllGenresLazyQueryHookResult = ReturnType<typeof useAllGenresLazyQuery>;
+export type AllGenresQueryResult = Apollo.QueryResult<AllGenresQuery, AllGenresQueryVariables>;
 export const AllTracksDocument = gql`
     query AllTracks {
   all_tracks {

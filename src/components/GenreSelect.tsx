@@ -37,8 +37,8 @@ export const GenreSelect = ({
       />
       <Select
         options={options}
-        value={genreTwo}
-        onChange={(val: SelectValue | null) => setGenreTwo(val)}
+        value={genreThree}
+        onChange={(val: SelectValue | null) => setGenreThree(val)}
         placeholder='Genre Three...'
         className='w-full'
       />

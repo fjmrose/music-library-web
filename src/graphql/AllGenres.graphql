@@ -1,0 +1,5 @@
+query AllGenres {
+  all_genres {
+    name
+  }
+}

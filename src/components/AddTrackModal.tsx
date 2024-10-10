@@ -1,4 +1,5 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useMemo, useState } from 'react';
+import { TrackType, useAllGenresQuery } from '../graphql/generated';
 import { GenreSelect } from './GenreSelect';
 import Input from './shared/form/input';
 import { Modal } from './shared/modal';
@@ -22,22 +23,25 @@ export const AddTrackModal = ({ open, onClose }: Props) => {
   const [genreThree, setGenreThree] = useState<SelectValue | null>(null);
   const [url, setUrl] = useState<string>('');
 
-  const onSubmit = () => {};
+  const { data: genresData, loading: genresLoading } = useAllGenresQuery();
 
-  const x = [
-    {
-      label: 'Label One',
-      value: 'Value One',
-    },
-    {
-      label: 'Label Two',
-      value: 'Value Two',
-    },
-    {
-      label: 'Label Three',
-      value: 'Value Three',
-    },
-  ];
+  const genreOptions = useMemo<SelectValue[]>(() => {
+    if (genresLoading || !genresData) {
+      return [];
+    }
+
+    const selected = [genreOne, genreTwo, genreThree]
+      .filter(Boolean)
+      .map(g => g!.value);
+
+    const options = genresData.all_genres;
+
+    return options
+      .filter(g => !selected.includes(g.name))
+      .map(g => ({ value: g.name, label: g.name }));
+  }, [genresData, genreOne, genreTwo, genreThree]);
+
+  const onSubmit = () => {};
 
   return (
     <Modal
@@ -51,6 +55,18 @@ export const AddTrackModal = ({ open, onClose }: Props) => {
         onSubmit={onSubmit}
         className='flex flex-col space-y-2 text-left p-2'
       >
+        <div className='flex flex-col space-y-2'>
+          <div className='text-sm font-semibold'>Track Type</div>
+          <Select
+            options={Object.values(TrackType).map(t => ({
+              value: t,
+              label: t,
+            }))}
+            value={trackType}
+            onChange={(val: SelectValue | null) => setTrackType(val)}
+            placeholder='Track Type...'
+          />
+        </div>
         <Input
           value={trackName}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -116,19 +132,10 @@ export const AddTrackModal = ({ open, onClose }: Props) => {
           labelClassName='font-semibold'
           className='h-8'
         />
-        <div className='flex flex-col space-y-2'>
-          <div className='text-sm font-semibold'>Track Type</div>
-          <Select
-            options={x}
-            value={trackType}
-            onChange={(val: SelectValue | null) => setTrackType(val)}
-            placeholder='Track Type...'
-          />
-        </div>
         <div className='flex flex-col space-y-2 w-full'>
           <div className='text-sm font-semibold'>Genres</div>
           <GenreSelect
-            options={x}
+            options={genreOptions}
             genreOne={genreOne}
             setGenreOne={setGenreOne}
             genreTwo={genreTwo}
