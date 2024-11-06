@@ -1,14 +1,14 @@
-import { useAllTracksQuery } from '../graphql/generated';
-import { TrackItemProps } from './types';
+import { useAllResourcesQuery } from '../graphql/generated';
+import { ResourceItemProps } from './types';
 
 export default function TrackTable() {
-  const { data: allTracksData, error, loading } = useAllTracksQuery();
+  const { data, loading } = useAllResourcesQuery();
 
   if (loading) {
-    return <div>loading tracks...</div>;
+    return <div>loading resources...</div>;
   }
 
-  console.log('all tracks: ', allTracksData);
+  console.log('all resources: ', { data });
 
   return (
     <table className='table-auto'>
@@ -22,7 +22,7 @@ export default function TrackTable() {
         </tr>
       </thead>
       <tbody>
-        {allTracksData?.all_tracks.map((t, i) => {
+        {/* {data?.all_resources.map((t, i) => {
           return (
             <TrackTableItem
               key={i}
@@ -36,7 +36,7 @@ export default function TrackTable() {
               url={t.url}
             />
           );
-        })}
+        })} */}
       </tbody>
     </table>
   );
@@ -44,19 +44,18 @@ export default function TrackTable() {
 
 function TrackTableItem({
   title,
-  artists,
-  album,
-  remix_artists,
-  track_type,
+  artist,
+  featured_artist,
+  remix_artist,
+  resource_type,
   host,
   genres,
-  url,
-}: TrackItemProps) {
+  resource_url,
+}: ResourceItemProps) {
   return (
     <tr>
       <td>{title}</td>
-      <td>{artists.join(', ')}</td>
-      <td>{album}</td>
+      <td>{artist}</td>
       <td>{genres.join(', ')}</td>
       <td>{host}</td>
     </tr>

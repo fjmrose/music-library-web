@@ -1,0 +1,11 @@
+mutation AddResource($input: ResourceInput!) {
+  add_resource(input: $input) {
+    id
+    title
+    resource_type
+    artist {
+      id
+      name
+    }
+  }
+}

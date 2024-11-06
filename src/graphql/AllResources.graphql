@@ -1,0 +1,29 @@
+query AllResources {
+  all_resources {
+    id
+    created_at
+    title
+    artist {
+      id
+      name
+    }
+    featured_artist {
+      id
+      name
+    }
+    remix_artist {
+      id
+      name
+    }
+    resource_type
+    resource_url
+    embedded_id
+    image_url
+    description
+    host
+    genres {
+      id
+      name
+    }
+  }
+}

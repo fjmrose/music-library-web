@@ -18,274 +18,261 @@ export type Scalars = {
   DateScalar: { input: any; output: any; }
 };
 
-export type Album = {
-  __typename?: 'Album';
-  host: Host;
-  id: Scalars['ID']['output'];
-  image?: Maybe<Scalars['String']['output']>;
-  title: Scalars['String']['output'];
-  tracks: Array<Track>;
-  url: Scalars['String']['output'];
-};
-
-export type AlbumInput = {
-  artist: Scalars['String']['input'];
-  host: Host;
-  title: Scalars['String']['input'];
-  tracks: Array<Scalars['String']['input']>;
-};
-
 export type Artist = {
   __typename?: 'Artist';
-  albums?: Maybe<Array<Album>>;
+  featured_resources?: Maybe<Array<Resource>>;
+  genres?: Maybe<Array<Genre>>;
   id: Scalars['ID']['output'];
-  mixes?: Maybe<Array<Mix>>;
   name: Scalars['String']['output'];
-  remixes?: Maybe<Array<Track>>;
-  tracks?: Maybe<Array<Track>>;
+  remixes?: Maybe<Array<Resource>>;
+  resources?: Maybe<Array<Resource>>;
 };
 
 export type Genre = {
   __typename?: 'Genre';
+  artists: Array<Artist>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  tracks: Array<Track>;
+  resources: Array<Resource>;
 };
 
 export enum Host {
-  Bandcamp = 'BANDCAMP',
-  Other = 'OTHER',
-  Soundcloud = 'SOUNDCLOUD',
-  Youtube = 'YOUTUBE'
+  Bandcamp = 'Bandcamp',
+  SoundCloud = 'SoundCloud',
+  YouTube = 'YouTube'
 }
-
-export type Mix = {
-  __typename?: 'Mix';
-  artist: Artist;
-  host: Host;
-  id: Scalars['ID']['output'];
-  image?: Maybe<Scalars['String']['output']>;
-  title: Scalars['String']['output'];
-  url: Scalars['String']['output'];
-};
-
-export type MixInput = {
-  artist: Scalars['String']['input'];
-  host?: InputMaybe<Host>;
-  image?: InputMaybe<Scalars['String']['input']>;
-  title: Scalars['String']['input'];
-  url: Scalars['String']['input'];
-};
 
 export type Mutation = {
   __typename?: 'Mutation';
-  add_album: Album;
-  add_mix: Mix;
-  add_track: Track;
+  add_resource: Resource;
 };
 
 
-export type MutationAdd_AlbumArgs = {
-  input: AlbumInput;
-};
-
-
-export type MutationAdd_MixArgs = {
-  input: MixInput;
-};
-
-
-export type MutationAdd_TrackArgs = {
-  input: TrackInput;
+export type MutationAdd_ResourceArgs = {
+  input: ResourceInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  all_albums: Array<Album>;
+  all_albums: Array<Resource>;
   all_artists: Array<Artist>;
   all_genres: Array<Genre>;
-  all_mixes: Array<Mix>;
-  all_tracks: Array<Track>;
+  all_mixes: Array<Resource>;
+  all_resources: Array<Resource>;
+  get_resource_metadata: ResourceMetaData;
 };
 
-export type Track = {
-  __typename?: 'Track';
-  album?: Maybe<Album>;
-  artists: Array<Artist>;
-  created_at?: Maybe<Scalars['DateScalar']['output']>;
-  genres: Array<Genre>;
-  host: Host;
-  id: Scalars['ID']['output'];
-  image?: Maybe<Scalars['String']['output']>;
-  release_date?: Maybe<Scalars['DateScalar']['output']>;
-  remix_artists?: Maybe<Array<Artist>>;
-  title: Scalars['String']['output'];
-  track_type: TrackType;
-  url: Scalars['String']['output'];
-};
 
-export type TrackInput = {
-  album?: InputMaybe<Scalars['String']['input']>;
-  artists?: InputMaybe<Array<Scalars['String']['input']>>;
-  genres: Array<Scalars['String']['input']>;
-  host: Host;
-  image?: InputMaybe<Scalars['String']['input']>;
-  release_date?: InputMaybe<Scalars['DateScalar']['input']>;
-  remix_artists?: InputMaybe<Array<Scalars['String']['input']>>;
-  title: Scalars['String']['input'];
-  track_type: TrackType;
+export type QueryGet_Resource_MetadataArgs = {
   url: Scalars['String']['input'];
 };
 
-export enum TrackType {
-  Bootleg = 'BOOTLEG',
-  ClubMix = 'CLUB_MIX',
-  Edit = 'EDIT',
-  Original = 'ORIGINAL',
-  RadioEdit = 'RADIO_EDIT',
-  Remix = 'REMIX'
+export type Resource = {
+  __typename?: 'Resource';
+  artist: Artist;
+  created_at?: Maybe<Scalars['DateScalar']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  embedded_id: Scalars['String']['output'];
+  featured_artist?: Maybe<Artist>;
+  genres: Array<Genre>;
+  host: Host;
+  id: Scalars['ID']['output'];
+  image_url?: Maybe<Scalars['String']['output']>;
+  release_date?: Maybe<Scalars['DateScalar']['output']>;
+  remix_artist?: Maybe<Artist>;
+  resource_type: ResourceType;
+  resource_url: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type ResourceInput = {
+  artist: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  embedded_id: Scalars['String']['input'];
+  featured_artist?: InputMaybe<Scalars['String']['input']>;
+  genres: Array<Scalars['String']['input']>;
+  host: Host;
+  image_url?: InputMaybe<Scalars['String']['input']>;
+  release_date?: InputMaybe<Scalars['DateScalar']['input']>;
+  remix_artist?: InputMaybe<Scalars['String']['input']>;
+  resource_type: ResourceType;
+  resource_url: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+};
+
+export type ResourceMetaData = {
+  __typename?: 'ResourceMetaData';
+  artist: Scalars['String']['output'];
+  artist_url?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  embedded_id: Scalars['String']['output'];
+  image_url?: Maybe<Scalars['String']['output']>;
+  resource_type: ResourceType;
+  title: Scalars['String']['output'];
+};
+
+export enum ResourceType {
+  Album = 'Album',
+  Mix = 'Mix',
+  OriginalTrack = 'OriginalTrack',
+  Remix = 'Remix'
 }
 
-export type AddTrackMutationVariables = Exact<{
-  input: TrackInput;
+export type AddResourceMutationVariables = Exact<{
+  input: ResourceInput;
 }>;
 
 
-export type AddTrackMutation = { __typename?: 'Mutation', add_track: { __typename?: 'Track', title: string, track_type: TrackType, artists: Array<{ __typename?: 'Artist', name: string }> } };
+export type AddResourceMutation = { __typename?: 'Mutation', add_resource: { __typename?: 'Resource', id: string, title: string, resource_type: ResourceType, artist: { __typename?: 'Artist', id: string, name: string } } };
 
-export type AllGenresQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type AllGenresQuery = { __typename?: 'Query', all_genres: Array<{ __typename?: 'Genre', name: string }> };
-
-export type AllTracksQueryVariables = Exact<{ [key: string]: never; }>;
+export type AllResourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllTracksQuery = { __typename?: 'Query', all_tracks: Array<{ __typename?: 'Track', created_at?: any | null, host: Host, id: string, image?: string | null, release_date?: any | null, title: string, track_type: TrackType, url: string, album?: { __typename?: 'Album', title: string, url: string } | null, artists: Array<{ __typename?: 'Artist', name: string }>, genres: Array<{ __typename?: 'Genre', name: string }>, remix_artists?: Array<{ __typename?: 'Artist', name: string }> | null }> };
+export type AllResourcesQuery = { __typename?: 'Query', all_resources: Array<{ __typename?: 'Resource', id: string, created_at?: any | null, title: string, resource_type: ResourceType, resource_url: string, embedded_id: string, image_url?: string | null, description?: string | null, host: Host, artist: { __typename?: 'Artist', id: string, name: string }, featured_artist?: { __typename?: 'Artist', id: string, name: string } | null, remix_artist?: { __typename?: 'Artist', id: string, name: string } | null, genres: Array<{ __typename?: 'Genre', id: string, name: string }> }> };
+
+export type GetResourceMetadataQueryVariables = Exact<{
+  url: Scalars['String']['input'];
+}>;
 
 
-export const AddTrackDocument = gql`
-    mutation AddTrack($input: TrackInput!) {
-  add_track(input: $input) {
+export type GetResourceMetadataQuery = { __typename?: 'Query', get_resource_metadata: { __typename?: 'ResourceMetaData', resource_type: ResourceType, title: string, artist: string, embedded_id: string, image_url?: string | null, artist_url?: string | null, description?: string | null } };
+
+
+export const AddResourceDocument = gql`
+    mutation AddResource($input: ResourceInput!) {
+  add_resource(input: $input) {
+    id
     title
-    track_type
-    artists {
+    resource_type
+    artist {
+      id
       name
     }
   }
 }
     `;
-export type AddTrackMutationFn = Apollo.MutationFunction<AddTrackMutation, AddTrackMutationVariables>;
+export type AddResourceMutationFn = Apollo.MutationFunction<AddResourceMutation, AddResourceMutationVariables>;
 
 /**
- * __useAddTrackMutation__
+ * __useAddResourceMutation__
  *
- * To run a mutation, you first call `useAddTrackMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddTrackMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useAddResourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddResourceMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addTrackMutation, { data, loading, error }] = useAddTrackMutation({
+ * const [addResourceMutation, { data, loading, error }] = useAddResourceMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useAddTrackMutation(baseOptions?: Apollo.MutationHookOptions<AddTrackMutation, AddTrackMutationVariables>) {
+export function useAddResourceMutation(baseOptions?: Apollo.MutationHookOptions<AddResourceMutation, AddResourceMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddTrackMutation, AddTrackMutationVariables>(AddTrackDocument, options);
+        return Apollo.useMutation<AddResourceMutation, AddResourceMutationVariables>(AddResourceDocument, options);
       }
-export type AddTrackMutationHookResult = ReturnType<typeof useAddTrackMutation>;
-export type AddTrackMutationResult = Apollo.MutationResult<AddTrackMutation>;
-export type AddTrackMutationOptions = Apollo.BaseMutationOptions<AddTrackMutation, AddTrackMutationVariables>;
-export const AllGenresDocument = gql`
-    query AllGenres {
-  all_genres {
-    name
-  }
-}
-    `;
-
-/**
- * __useAllGenresQuery__
- *
- * To run a query within a React component, call `useAllGenresQuery` and pass it any options that fit your needs.
- * When your component renders, `useAllGenresQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAllGenresQuery({
- *   variables: {
- *   },
- * });
- */
-export function useAllGenresQuery(baseOptions?: Apollo.QueryHookOptions<AllGenresQuery, AllGenresQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AllGenresQuery, AllGenresQueryVariables>(AllGenresDocument, options);
-      }
-export function useAllGenresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllGenresQuery, AllGenresQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AllGenresQuery, AllGenresQueryVariables>(AllGenresDocument, options);
-        }
-export type AllGenresQueryHookResult = ReturnType<typeof useAllGenresQuery>;
-export type AllGenresLazyQueryHookResult = ReturnType<typeof useAllGenresLazyQuery>;
-export type AllGenresQueryResult = Apollo.QueryResult<AllGenresQuery, AllGenresQueryVariables>;
-export const AllTracksDocument = gql`
-    query AllTracks {
-  all_tracks {
-    album {
-      title
-      url
-    }
-    artists {
-      name
-    }
-    created_at
-    genres {
-      name
-    }
-    host
+export type AddResourceMutationHookResult = ReturnType<typeof useAddResourceMutation>;
+export type AddResourceMutationResult = Apollo.MutationResult<AddResourceMutation>;
+export type AddResourceMutationOptions = Apollo.BaseMutationOptions<AddResourceMutation, AddResourceMutationVariables>;
+export const AllResourcesDocument = gql`
+    query AllResources {
+  all_resources {
     id
-    image
-    release_date
-    remix_artists {
+    created_at
+    title
+    artist {
+      id
       name
     }
-    title
-    track_type
-    url
+    featured_artist {
+      id
+      name
+    }
+    remix_artist {
+      id
+      name
+    }
+    resource_type
+    resource_url
+    embedded_id
+    image_url
+    description
+    host
+    genres {
+      id
+      name
+    }
   }
 }
     `;
 
 /**
- * __useAllTracksQuery__
+ * __useAllResourcesQuery__
  *
- * To run a query within a React component, call `useAllTracksQuery` and pass it any options that fit your needs.
- * When your component renders, `useAllTracksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useAllResourcesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllResourcesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAllTracksQuery({
+ * const { data, loading, error } = useAllResourcesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useAllTracksQuery(baseOptions?: Apollo.QueryHookOptions<AllTracksQuery, AllTracksQueryVariables>) {
+export function useAllResourcesQuery(baseOptions?: Apollo.QueryHookOptions<AllResourcesQuery, AllResourcesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AllTracksQuery, AllTracksQueryVariables>(AllTracksDocument, options);
+        return Apollo.useQuery<AllResourcesQuery, AllResourcesQueryVariables>(AllResourcesDocument, options);
       }
-export function useAllTracksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTracksQuery, AllTracksQueryVariables>) {
+export function useAllResourcesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllResourcesQuery, AllResourcesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AllTracksQuery, AllTracksQueryVariables>(AllTracksDocument, options);
+          return Apollo.useLazyQuery<AllResourcesQuery, AllResourcesQueryVariables>(AllResourcesDocument, options);
         }
-export type AllTracksQueryHookResult = ReturnType<typeof useAllTracksQuery>;
-export type AllTracksLazyQueryHookResult = ReturnType<typeof useAllTracksLazyQuery>;
-export type AllTracksQueryResult = Apollo.QueryResult<AllTracksQuery, AllTracksQueryVariables>;
+export type AllResourcesQueryHookResult = ReturnType<typeof useAllResourcesQuery>;
+export type AllResourcesLazyQueryHookResult = ReturnType<typeof useAllResourcesLazyQuery>;
+export type AllResourcesQueryResult = Apollo.QueryResult<AllResourcesQuery, AllResourcesQueryVariables>;
+export const GetResourceMetadataDocument = gql`
+    query GetResourceMetadata($url: String!) {
+  get_resource_metadata(url: $url) {
+    resource_type
+    title
+    artist
+    embedded_id
+    image_url
+    artist_url
+    description
+  }
+}
+    `;
+
+/**
+ * __useGetResourceMetadataQuery__
+ *
+ * To run a query within a React component, call `useGetResourceMetadataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetResourceMetadataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetResourceMetadataQuery({
+ *   variables: {
+ *      url: // value for 'url'
+ *   },
+ * });
+ */
+export function useGetResourceMetadataQuery(baseOptions: Apollo.QueryHookOptions<GetResourceMetadataQuery, GetResourceMetadataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetResourceMetadataQuery, GetResourceMetadataQueryVariables>(GetResourceMetadataDocument, options);
+      }
+export function useGetResourceMetadataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetResourceMetadataQuery, GetResourceMetadataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetResourceMetadataQuery, GetResourceMetadataQueryVariables>(GetResourceMetadataDocument, options);
+        }
+export type GetResourceMetadataQueryHookResult = ReturnType<typeof useGetResourceMetadataQuery>;
+export type GetResourceMetadataLazyQueryHookResult = ReturnType<typeof useGetResourceMetadataLazyQuery>;
+export type GetResourceMetadataQueryResult = Apollo.QueryResult<GetResourceMetadataQuery, GetResourceMetadataQueryVariables>;

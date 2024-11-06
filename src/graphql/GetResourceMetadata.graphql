@@ -1,0 +1,11 @@
+query GetResourceMetadata($url: String!) {
+  get_resource_metadata(url: $url) {
+    resource_type
+    title
+    artist
+    embedded_id
+    image_url
+    artist_url
+    description
+  }
+}
