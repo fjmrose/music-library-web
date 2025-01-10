@@ -1,6 +1,7 @@
 query GetResourceMetadata($url: String!) {
   get_resource_metadata(url: $url) {
     resource_type
+    host
     title
     artist
     embedded_id

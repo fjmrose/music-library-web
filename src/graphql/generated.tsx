@@ -102,10 +102,11 @@ export type ResourceInput = {
 
 export type ResourceMetaData = {
   __typename?: 'ResourceMetaData';
-  artist: Scalars['String']['output'];
+  artist?: Maybe<Scalars['String']['output']>;
   artist_url?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   embedded_id: Scalars['String']['output'];
+  host: Host;
   image_url?: Maybe<Scalars['String']['output']>;
   resource_type: ResourceType;
   title: Scalars['String']['output'];
@@ -125,6 +126,11 @@ export type AddResourceMutationVariables = Exact<{
 
 export type AddResourceMutation = { __typename?: 'Mutation', add_resource: { __typename?: 'Resource', id: string, title: string, resource_type: ResourceType, artist: { __typename?: 'Artist', id: string, name: string } } };
 
+export type AllGenresQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllGenresQuery = { __typename?: 'Query', all_genres: Array<{ __typename?: 'Genre', id: string, name: string }> };
+
 export type AllResourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -135,7 +141,7 @@ export type GetResourceMetadataQueryVariables = Exact<{
 }>;
 
 
-export type GetResourceMetadataQuery = { __typename?: 'Query', get_resource_metadata: { __typename?: 'ResourceMetaData', resource_type: ResourceType, title: string, artist: string, embedded_id: string, image_url?: string | null, artist_url?: string | null, description?: string | null } };
+export type GetResourceMetadataQuery = { __typename?: 'Query', get_resource_metadata: { __typename?: 'ResourceMetaData', resource_type: ResourceType, host: Host, title: string, artist?: string | null, embedded_id: string, image_url?: string | null, artist_url?: string | null, description?: string | null } };
 
 
 export const AddResourceDocument = gql`
@@ -177,6 +183,41 @@ export function useAddResourceMutation(baseOptions?: Apollo.MutationHookOptions<
 export type AddResourceMutationHookResult = ReturnType<typeof useAddResourceMutation>;
 export type AddResourceMutationResult = Apollo.MutationResult<AddResourceMutation>;
 export type AddResourceMutationOptions = Apollo.BaseMutationOptions<AddResourceMutation, AddResourceMutationVariables>;
+export const AllGenresDocument = gql`
+    query AllGenres {
+  all_genres {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useAllGenresQuery__
+ *
+ * To run a query within a React component, call `useAllGenresQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllGenresQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllGenresQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllGenresQuery(baseOptions?: Apollo.QueryHookOptions<AllGenresQuery, AllGenresQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllGenresQuery, AllGenresQueryVariables>(AllGenresDocument, options);
+      }
+export function useAllGenresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllGenresQuery, AllGenresQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllGenresQuery, AllGenresQueryVariables>(AllGenresDocument, options);
+        }
+export type AllGenresQueryHookResult = ReturnType<typeof useAllGenresQuery>;
+export type AllGenresLazyQueryHookResult = ReturnType<typeof useAllGenresLazyQuery>;
+export type AllGenresQueryResult = Apollo.QueryResult<AllGenresQuery, AllGenresQueryVariables>;
 export const AllResourcesDocument = gql`
     query AllResources {
   all_resources {
@@ -239,6 +280,7 @@ export const GetResourceMetadataDocument = gql`
     query GetResourceMetadata($url: String!) {
   get_resource_metadata(url: $url) {
     resource_type
+    host
     title
     artist
     embedded_id

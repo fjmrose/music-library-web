@@ -1,5 +1,8 @@
 /* eslint-disable no-nested-ternary */
-import ReactSelect, { MenuPlacement } from 'react-select';
+import ReactSelect, {
+  FormatOptionLabelMeta,
+  MenuPlacement,
+} from 'react-select';
 
 export type SelectValue = {
   value: string;
@@ -48,7 +51,10 @@ export default function Select(props: SelectProps) {
       className={className}
       isSearchable={isSearchable}
       name={name}
-      formatOptionLabel={(data, option) => {
+      formatOptionLabel={(
+        data: SelectValue,
+        option: FormatOptionLabelMeta<SelectValue>
+      ) => {
         if (option.context === 'value') {
           return (
             <>
