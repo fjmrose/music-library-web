@@ -59,6 +59,7 @@ export type Query = {
   all_genres: Array<Genre>;
   all_mixes: Array<Resource>;
   all_resources: Array<Resource>;
+  all_tags: Array<Tag>;
   get_resource_metadata: ResourceMetaData;
 };
 
@@ -82,6 +83,7 @@ export type Resource = {
   remix_artist?: Maybe<Artist>;
   resource_type: ResourceType;
   resource_url: Scalars['String']['output'];
+  tags?: Maybe<Array<Tag>>;
   title: Scalars['String']['output'];
 };
 
@@ -97,6 +99,7 @@ export type ResourceInput = {
   remix_artist?: InputMaybe<Scalars['String']['input']>;
   resource_type: ResourceType;
   resource_url: Scalars['String']['input'];
+  tags?: InputMaybe<Array<TagInput>>;
   title: Scalars['String']['input'];
 };
 
@@ -119,6 +122,17 @@ export enum ResourceType {
   Remix = 'Remix'
 }
 
+export type Tag = {
+  __typename?: 'Tag';
+  emoji?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+};
+
+export type TagInput = {
+  emoji?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
 export type AddResourceMutationVariables = Exact<{
   input: ResourceInput;
 }>;
@@ -135,6 +149,11 @@ export type AllResourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllResourcesQuery = { __typename?: 'Query', all_resources: Array<{ __typename?: 'Resource', id: string, created_at?: any | null, title: string, resource_type: ResourceType, resource_url: string, embedded_id: string, image_url?: string | null, description?: string | null, host: Host, artist: { __typename?: 'Artist', id: string, name: string }, featured_artist?: { __typename?: 'Artist', id: string, name: string } | null, remix_artist?: { __typename?: 'Artist', id: string, name: string } | null, genres: Array<{ __typename?: 'Genre', id: string, name: string }> }> };
+
+export type AllTagsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllTagsQuery = { __typename?: 'Query', all_tags: Array<{ __typename?: 'Tag', name: string, emoji?: string | null }> };
 
 export type GetResourceMetadataQueryVariables = Exact<{
   url: Scalars['String']['input'];
@@ -276,6 +295,41 @@ export function useAllResourcesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type AllResourcesQueryHookResult = ReturnType<typeof useAllResourcesQuery>;
 export type AllResourcesLazyQueryHookResult = ReturnType<typeof useAllResourcesLazyQuery>;
 export type AllResourcesQueryResult = Apollo.QueryResult<AllResourcesQuery, AllResourcesQueryVariables>;
+export const AllTagsDocument = gql`
+    query AllTags {
+  all_tags {
+    name
+    emoji
+  }
+}
+    `;
+
+/**
+ * __useAllTagsQuery__
+ *
+ * To run a query within a React component, call `useAllTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllTagsQuery(baseOptions?: Apollo.QueryHookOptions<AllTagsQuery, AllTagsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllTagsQuery, AllTagsQueryVariables>(AllTagsDocument, options);
+      }
+export function useAllTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTagsQuery, AllTagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllTagsQuery, AllTagsQueryVariables>(AllTagsDocument, options);
+        }
+export type AllTagsQueryHookResult = ReturnType<typeof useAllTagsQuery>;
+export type AllTagsLazyQueryHookResult = ReturnType<typeof useAllTagsLazyQuery>;
+export type AllTagsQueryResult = Apollo.QueryResult<AllTagsQuery, AllTagsQueryVariables>;
 export const GetResourceMetadataDocument = gql`
     query GetResourceMetadata($url: String!) {
   get_resource_metadata(url: $url) {

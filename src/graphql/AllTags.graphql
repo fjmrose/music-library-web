@@ -1,0 +1,6 @@
+query AllTags {
+  all_tags {
+    name
+    emoji
+  }
+}

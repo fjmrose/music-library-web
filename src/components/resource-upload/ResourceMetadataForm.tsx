@@ -1,5 +1,8 @@
+import { isEmpty } from 'lodash';
+import { useMemo } from 'react';
+import { useAllGenresQuery, useAllTagsQuery } from '../../graphql/generated';
 import Select, { SelectValue } from '../shared/select';
-import { GenreMultiSelect } from './GenreMultiSelect';
+import { MultiSelect } from '../shared/select/MultiSelect';
 import { resourceTypeOptions } from './constants';
 
 interface Props {
@@ -13,6 +16,8 @@ interface Props {
   setArtist: (value?: string) => void;
   genres: SelectValue[];
   setGenres: (genres: SelectValue[]) => void;
+  tags: SelectValue[];
+  setTags: (tags: SelectValue[]) => void;
 }
 
 export const ResourceMetadataForm = ({
@@ -26,7 +31,44 @@ export const ResourceMetadataForm = ({
   setArtist,
   genres,
   setGenres,
+  tags,
+  setTags,
 }: Props) => {
+  const { data: genresData, loading: genresLoading } = useAllGenresQuery();
+  const { data: tagsData, loading: tagsLoading } = useAllTagsQuery();
+
+  const genreOptions = useMemo<SelectValue[]>(() => {
+    const mockOptions: SelectValue[] = [
+      { value: 'IDM', label: 'IDM' },
+      { value: 'Jazz', label: 'Jazz' },
+      { value: 'Deep House', label: 'Deep House' },
+      { value: 'Trip Hop', label: 'Trip Hop' },
+      { value: 'Alt Rock', label: 'Alt Rock' },
+    ];
+    const genres = genresData?.all_genres;
+
+    if (!genres || isEmpty(genres)) {
+      return mockOptions;
+    }
+
+    return genres.map(g => ({ value: g.name, label: g.name }));
+  }, [genresData]);
+
+  const tagOptions = useMemo<SelectValue[]>(() => {
+    const mockOptions: SelectValue[] = [
+      { value: 'Kickon', label: 'Kickon' },
+      { value: 'Morning', label: 'Morning' },
+      { value: 'House Party', label: 'House Party' },
+    ];
+    const tags = tagsData?.all_tags;
+
+    if (!tags || isEmpty(tags)) {
+      return mockOptions;
+    }
+
+    return tags.map(t => ({ value: t.name, label: t.name }));
+  }, [tagsData]);
+
   return (
     <form>
       <div className='flex flex-col space-y-3'>
@@ -41,17 +83,6 @@ export const ResourceMetadataForm = ({
         </div>
         <div className='flex flex-row justify-start space-x-3 w-full'>
           <div className='w-1/4'>
-            {/* <select
-              id='resource-type'
-              value={resourceType}
-              onChange={e => setResourceType(e.target.value as ResourceType)}
-              className='p-2 border rounded-md w-full'
-            >
-              <option key='placeholder'>Resource Type</option>
-              {resourceTypeOptions.map(t => (
-                <option key={t}>{t}</option>
-              ))}
-            </select> */}
             <Select
               options={resourceTypeOptions.map(t => ({ value: t, label: t }))}
               value={resourceType}
@@ -80,8 +111,20 @@ export const ResourceMetadataForm = ({
           </span>
         </div>
         <div className='flex flex-row justify-start w-full'>
-          <GenreMultiSelect genres={genres} setGenres={setGenres} />
-          {/* <MultiSelectTestComponent /> */}
+          <MultiSelect
+            options={genreOptions}
+            selected={genres}
+            setSelected={setGenres}
+            placeholder='Select or enter genres...'
+          />
+        </div>
+        <div className='flex flex-row justify-start w-full'>
+          <MultiSelect
+            options={tagOptions}
+            selected={tags}
+            setSelected={setTags}
+            placeholder='Select or enter tags...'
+          />
         </div>
       </div>
     </form>
