@@ -1,4 +1,5 @@
 import cx from 'classnames';
+import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import {
   ResourceMetaData,
@@ -8,6 +9,7 @@ import {
 } from '../../graphql/generated';
 import Spinner from '../shared/animation/Spinner';
 import { SelectValue } from '../shared/select';
+import { isResourceType } from '../types';
 import { ResourceMetadataForm } from './ResourceMetadataForm';
 import { resourceTypeOptions } from './constants';
 
@@ -20,8 +22,9 @@ export const ResourceUpload = () => {
   const [tags, setTags] = useState<SelectValue[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const [getResourceMetadata, { loading }] = useGetResourceMetadataLazyQuery();
-  const [addResource, { loading: addResourceLoading }] =
+  const [getResourceMetadata, { data, loading }] =
+    useGetResourceMetadataLazyQuery();
+  const [addResource, { data: resourceData, loading: addResourceLoading }] =
     useAddResourceMutation();
 
   useEffect(() => {
@@ -30,7 +33,7 @@ export const ResourceUpload = () => {
     }
 
     const getMetadata = async () => {
-      const { data } = await getResourceMetadata({
+      await getResourceMetadata({
         variables: {
           url,
         },
@@ -57,9 +60,50 @@ export const ResourceUpload = () => {
     };
 
     getMetadata();
-  }, [url]);
+  }, [url, data]);
 
-  const handleAddResource = () => {};
+  const handleAddResource = async () => {
+    setUploadError(null);
+
+    if (!url || !resourceType || !artist || !title || isEmpty(genres)) {
+      setUploadError('Incomplete fields');
+      return;
+    } else if (!isResourceType(resourceType.value)) {
+      setUploadError(`Invalid resource type: ${resourceType.value}`);
+      return;
+    } else if (!data?.get_resource_metadata.embedded_id) {
+      setUploadError('');
+      return;
+    }
+
+    try {
+      const genreStrings = genres.map(g => g.value);
+      const tagObjects = !isEmpty(tags)
+        ? tags.map(t => ({ name: t.value })) // we will add emoji property here at some stage
+        : undefined;
+
+      const { host, embedded_id } = data?.get_resource_metadata;
+
+      await addResource({
+        variables: {
+          input: {
+            title,
+            artist,
+            resource_type: resourceType.value as ResourceType,
+            genres: genreStrings,
+            tags: tagObjects,
+            embedded_id,
+            host,
+            resource_url: url,
+          },
+        },
+      });
+
+      console.log('Resource added!', { resourceData });
+    } catch (error: any) {
+      setUploadError(error.message || 'Upload error');
+    }
+  };
 
   return (
     <div className='flex flex-col space-y-3 p-3'>
@@ -86,7 +130,12 @@ export const ResourceUpload = () => {
             'p-2 font-semibold text-white w-1/5 rounded-sm'
           )}
           onClick={handleAddResource}
-          disabled={!url || addResourceLoading}
+          disabled={
+            !url ||
+            addResourceLoading ||
+            !data ||
+            !data.get_resource_metadata.embedded_id
+          }
         >
           {addResourceLoading ? (
             <div className='flex justify-center'>

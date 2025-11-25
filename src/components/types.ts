@@ -10,3 +10,7 @@ export interface ResourceItemProps {
   genres: string[];
   resource_url: string;
 }
+
+export const isResourceType = (input: string): input is ResourceType => {
+  return Object.values(ResourceType).includes(input as ResourceType);
+};
