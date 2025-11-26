@@ -1,0 +1,11 @@
+name: pipeline
+on: workflow_dispatch
+
+jobs:
+  first_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print start worflow message
+        run: echo "Running pipeline workflow"
+      - name: Print end workflow message
+        run: echo "Pipeline workflow finished"
